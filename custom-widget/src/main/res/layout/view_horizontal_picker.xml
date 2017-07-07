@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<jp.onetake.widget.ResponsiveHorizontalScrollView
+		android:id="@+id/scroll_area"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:id="@+id/layout_contents"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+		    android:orientation="horizontal">
+
+			<!--
+				限界までスクロールしたらバウンスで跳ね返すのではなく初めから限界以上はスクロールさせない
+				そのためのスペース
+			-->
+			<View
+				android:id="@+id/view_left_space"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+			    android:visibility="invisible"
+			    />
+
+			<!-- 限界までスクロールしたら以下略 -->
+			<View
+				android:id="@+id/view_right_space"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:visibility="invisible"
+				/>
+
+		</LinearLayout>
+
+	</jp.onetake.widget.ResponsiveHorizontalScrollView>
+
+	<View
+		android:id="@+id/view_overlay_right"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="end"
+		android:visibility="invisible"
+		/>
+
+	<View
+		android:id="@+id/view_overlay_left"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="start"
+		android:visibility="invisible"
+		/>
+
+	<!-- ピッカーの中心に置く赤い点。デバッグ用 -->
+	<View
+		android:layout_width="4dp"
+		android:layout_height="4dp"
+	    android:background="#ffff0000"
+	    android:layout_gravity="center"
+	    android:visibility="invisible"
+	    />
+
+</FrameLayout>

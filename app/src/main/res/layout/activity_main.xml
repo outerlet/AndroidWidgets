@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context="jp.onetake.sample.widget.MainActivity">
+
+	<jp.onetake.widget.HorizontalPicker
+		android:id="@+id/hpicker"
+		android:layout_width="match_parent"
+		android:layout_height="64dp"
+	    app:item_width="120dp"
+	    app:background_color="#80000000"
+	    app:overlay_visible="true"
+		/>
+
+	<jp.onetake.widget.RecyclerHorizontalPicker
+		android:id="@+id/recycler_hpicker"
+		android:layout_width="match_parent"
+		android:layout_height="64dp"
+	    app:item_width="120dp"
+	    app:background_color="#80ffff00"
+	    app:overlay_visible="true"
+		/>
+
+</LinearLayout>

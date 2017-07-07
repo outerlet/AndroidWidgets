@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/textview_item"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+	    android:textSize="20sp"
+	    android:textColor="@android:color/black"
+	    android:visibility="invisible"
+		/>
+
+	<ImageView
+		android:id="@+id/imageview_item"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+	    android:scaleType="center"
+		android:visibility="invisible"
+	    tools:ignore="ContentDescription"
+		/>
+
+	<!-- ピッカーの選択項目の左上に置く赤い点。デバッグ用 -->
+	<View
+		android:layout_width="4dp"
+		android:layout_height="4dp"
+		android:layout_gravity="top|left"
+	    android:background="#ff0000"
+	    android:visibility="invisible"
+		tools:ignore="RtlHardcoded"
+		/>
+
+	<!-- ピッカーの選択項目の中心に置く灰色の点。デバッグ用 -->
+	<View
+		android:layout_width="4dp"
+		android:layout_height="4dp"
+		android:layout_gravity="center"
+		android:background="#808080"
+	    android:visibility="invisible"
+		/>
+
+</FrameLayout>

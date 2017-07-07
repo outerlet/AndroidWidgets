@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<attr name="item_width" format="dimension" />
+	<attr name="overlay_visible" format="boolean" />
+	<attr name="background_color" format="color" />
+	<attr name="overlay_color" format="color" />
+
+	<declare-styleable name="HorizontalPicker">
+		<attr name="item_width" />
+		<attr name="overlay_visible" />
+		<attr name="background_color" />
+		<attr name="overlay_color" />
+	</declare-styleable>
+
+	<declare-styleable name="RecyclerHorizontalPicker">
+		<attr name="item_width" />
+		<attr name="overlay_visible" />
+		<attr name="background_color" />
+		<attr name="overlay_color" />
+	</declare-styleable>
+
+</resources>
