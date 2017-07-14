@@ -12,30 +12,40 @@ import android.widget.HorizontalScrollView;
  */
 public class ResponsiveHorizontalScrollView extends HorizontalScrollView {
 	public interface OnScrollChangedListener {
+		void onScroll(ResponsiveHorizontalScrollView scrollView);
 		void onScrollEnded(ResponsiveHorizontalScrollView scrollView);
 	}
 	
 	private class ScrollChecker implements Runnable {
+		// 指が離れてからスクロールが継続されているかチェックするまでの時間(msec)
+		// 50msecくらいでいい気もするが少し余裕を持たせる。100だと操作してて違和感があるのでそこまで大きくするべきではない
+		private static final int DELAY_SCROLL_CHECK = 60;
+		
+		private int mLatestX;
+		
+		void check() {
+			mLatestX = getScrollX();
+			ResponsiveHorizontalScrollView.this.postDelayed(this, DELAY_SCROLL_CHECK);
+		}
+		
 		@Override
 		public void run() {
 			int position = getScrollX();
 			
-			if (mLatestPosition - position == 0) {
+			if (mLatestX - position == 0) {
 				if (mListener != null) {
 					mListener.onScrollEnded(ResponsiveHorizontalScrollView.this);
 				}
 			} else {
+				if (mListener != null) {
+					mListener.onScroll(ResponsiveHorizontalScrollView.this);
+				}
 				checkScroll();
 			}
 		}
 	}
 	
-	// 指が離れてからスクロールが継続されているかチェックするまでの時間(msec)
-	// 50msecくらいでいい気もするが少し余裕を持たせる。100だと操作してて違和感があるのでそこまで大きくするべきではない
-	private static final int DELAY_SCROLL_CHECK = 60;
-	
-	private ScrollChecker mScrollChecker;
-	private int mLatestPosition;
+	private ScrollChecker mChecker;
 	private OnScrollChangedListener mListener;
 	
 	public ResponsiveHorizontalScrollView(Context context) {
@@ -45,14 +55,19 @@ public class ResponsiveHorizontalScrollView extends HorizontalScrollView {
 	public ResponsiveHorizontalScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		mScrollChecker = new ScrollChecker();
+		mChecker = new ScrollChecker();
 	}
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if (ev.getAction() == MotionEvent.ACTION_UP) {
 			checkScroll();
+		} else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+			if (mListener != null) {
+				mListener.onScroll(this);
+			}
 		}
+		
 		return super.dispatchTouchEvent(ev);
 	}
 	
@@ -61,7 +76,6 @@ public class ResponsiveHorizontalScrollView extends HorizontalScrollView {
 	}
 	
 	private void checkScroll() {
-		mLatestPosition = getScrollX();
-		ResponsiveHorizontalScrollView.this.postDelayed(mScrollChecker, DELAY_SCROLL_CHECK);
+		mChecker.check();
 	}
 }

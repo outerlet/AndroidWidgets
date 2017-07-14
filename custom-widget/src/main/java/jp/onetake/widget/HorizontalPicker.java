@@ -40,12 +40,14 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 	public static class HorizontalPickerAdapter extends ArrayList<PickerItem> {
 		private HorizontalPicker picker;
 		
+		@SuppressWarnings("unused")
 		public void add(String text) {
 			PickerItem item = new PickerItem();
 			item.text = text;
 			add(item);
 		}
 		
+		@SuppressWarnings("unused")
 		public void add(Bitmap bitmap) {
 			PickerItem item = new PickerItem();
 			item.bitmap = bitmap;
@@ -64,12 +66,8 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 	private OnSelectListener mListener;
 	
 	private LinearLayout mContentsLayout;
-	private View[] mOverlays;
-	private View[] mSpaces;
-	private int mWidth;
+	private View[] mSideViews;
 	private int mItemWidth;
-	private int mOverlayWidth;
-	private boolean mIsLayouted;
 	
 	public HorizontalPicker(@NonNull Context context) {
 		this(context, null);
@@ -83,13 +81,19 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 		ResponsiveHorizontalScrollView scrollView = (ResponsiveHorizontalScrollView)findViewById(R.id.scroll_area);
 		scrollView.setHorizontalScrollBarEnabled(false);
 		scrollView.setListener(this);
-		
-		mOverlays = new View[] { view.findViewById(R.id.view_overlay_left), view.findViewById(R.id.view_overlay_right) };
-		mSpaces = new View[] { view.findViewById(R.id.view_left_space), view.findViewById(R.id.view_right_space) };
+
+		int[] viewIds = new int[] { R.id.view_overlay_left, R.id.view_overlay_right, R.id.view_left_space, R.id.view_right_space };
+		mSideViews = new View[viewIds.length];
+		for (int i = 0 ; i < viewIds.length ; i++) {
+			int viewId = viewIds[i];
+			
+			View v = view.findViewById(viewId);
+			v.setTag(viewId == R.id.view_overlay_left || viewId == R.id.view_overlay_right);
+			mSideViews[i] = v;
+		}
 		
 		mContentsLayout = (LinearLayout)view.findViewById(R.id.layout_contents);
 		
-		mIsLayouted = false;
 		mItemWidth = DEFAULT_PICKER_ITEM_WIDTH;
 		
 		if (attrs != null) {
@@ -104,16 +108,19 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 			if (array.getBoolean(R.styleable.HorizontalPicker_overlay_visible, false)) {
 				int color = array.getColor(R.styleable.HorizontalPicker_overlay_color, backgroundColor);
 				
-				for (View overlay : mOverlays) {
-					overlay.setVisibility(View.VISIBLE);
-					overlay.setBackgroundColor(color);
+				for (View sideView : mSideViews) {
+					if ((boolean)sideView.getTag()) {
+						sideView.setVisibility(View.VISIBLE);
+						sideView.setBackgroundColor(color);
+					}
 				}
 			}
 			
 			array.recycle();
 		}
 	}
-
+	
+	@SuppressWarnings("unused")
 	public void setAdapter(HorizontalPickerAdapter adapter) {
 		mAdapter = adapter;
 		mAdapter.picker = this;
@@ -121,6 +128,12 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 		refresh();
 	}
 	
+	@SuppressWarnings("unused")
+	public HorizontalPickerAdapter getAdapter() {
+		return mAdapter;
+	}
+	
+	@SuppressWarnings("unused")
 	public void setOnSelectListener(OnSelectListener listener) {
 		mListener = listener;
 	}
@@ -133,14 +146,10 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 		for (PickerItem item : mAdapter) {
 			addView(item);
 		}
-		
-		android.util.Log.d(getClass().getSimpleName(), "CHILD-COUNT = " + mContentsLayout.getChildCount());
 	}
 	
 	private void addView(PickerItem item) {
 		View view = LayoutInflater.from(getContext()).inflate(R.layout.view_picker_item, this, false);
-		
-		view.getLayoutParams().width = mItemWidth;
 		
 		if (item.text != null) {
 			TextView textView = (TextView)view.findViewById(R.id.textview_item);
@@ -159,35 +168,36 @@ public class HorizontalPicker extends FrameLayout implements ResponsiveHorizonta
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		
-		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mOverlayWidth = (mWidth - mItemWidth) / 2;
-	}
-	
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		super.onLayout(changed, left, top, right, bottom);
+		int sideWidth = (MeasureSpec.getSize(widthMeasureSpec) - mItemWidth) / 2;
+		int layoutWidth = sideWidth * 2 + mItemWidth * (mContentsLayout.getChildCount() - 2);
 		
-		if (!mIsLayouted) {
-			for (View overlay : mOverlays) {
-				overlay.getLayoutParams().width = mOverlayWidth;
-			}
-			
-			for (View space : mSpaces) {
-				space.getLayoutParams().width = mOverlayWidth;
-			}
-			
-			mIsLayouted = true;
+		mContentsLayout.measure(MeasureSpec.makeMeasureSpec(layoutWidth, MeasureSpec.EXACTLY), heightMeasureSpec);
+		
+		int sideSpec = MeasureSpec.makeMeasureSpec(sideWidth, MeasureSpec.EXACTLY);
+		for (View view : mSideViews) {
+			view.measure(sideSpec, heightMeasureSpec);
+		}
+		
+		int itemSpec = MeasureSpec.makeMeasureSpec(mItemWidth, MeasureSpec.EXACTLY);
+		for (int i = 1 ; i < mContentsLayout.getChildCount() - 1 ; i++) {
+			View item = mContentsLayout.getChildAt(i);
+			item.measure(itemSpec, heightMeasureSpec);
 		}
 	}
 	
 	@Override
+	public void onScroll(ResponsiveHorizontalScrollView scrollView) {
+		// Do nothing.
+	}
+	
+	@Override
 	public void onScrollEnded(ResponsiveHorizontalScrollView scrollView) {
-		int centerX = scrollView.getScrollX() + mWidth / 2;
+		int centerX = scrollView.getScrollX() + this.getMeasuredWidth() / 2;
 		
 		for (int i = 1; i < mContentsLayout.getChildCount() - 1; i++) {
 			View view = mContentsLayout.getChildAt(i);
 			
-			if (centerX >= view.getX() && centerX < view.getX() + view.getLayoutParams().width) {
+			if (centerX >= view.getX() && centerX < view.getX() + view.getWidth()) {
 				int viewCenterX = (int)view.getX() + mItemWidth / 2;
 				scrollView.smoothScrollBy(viewCenterX - centerX, 0);
 				
