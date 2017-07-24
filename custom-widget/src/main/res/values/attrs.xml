@@ -19,4 +19,13 @@
 		<attr name="overlay_color" />
 	</declare-styleable>
 
+	<declare-styleable name="HorizontalWheel">
+		<attr name="scalesNumber" format="integer" />
+		<attr name="pointerVisible" format="boolean" />
+		<attr name="pointerColor" format="color" />
+		<attr name="scaleColor" format="color" />
+		<attr name="pointerWidth" format="dimension" />
+		<attr name="scaleWidth" format="dimension" />
+	</declare-styleable>
+
 </resources>

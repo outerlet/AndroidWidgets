@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<integer name="default_scales_number">40</integer>
+	<color name="default_pointer_color">#ff000000</color>
+	<color name="default_scale_color">#ffffffff</color>
+	<dimen name="default_pointer_width">2dp</dimen>
+	<dimen name="default_scale_width">2dp</dimen>
+
+</resources>
