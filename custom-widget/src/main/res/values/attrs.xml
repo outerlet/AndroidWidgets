@@ -20,12 +20,22 @@
 	</declare-styleable>
 
 	<declare-styleable name="HorizontalWheel">
-		<attr name="scalesNumber" format="integer" />
-		<attr name="pointerVisible" format="boolean" />
-		<attr name="pointerColor" format="color" />
-		<attr name="scaleColor" format="color" />
-		<attr name="pointerWidth" format="dimension" />
-		<attr name="scaleWidth" format="dimension" />
+		<!-- 目盛りの数。デフォルトはR.integer.default_scales_number -->
+		<attr name="scales_number" format="integer" />
+		<!-- ポインタ(中央線)の可視状態。デフォルトはtrue -->
+		<attr name="pointer_visible" format="boolean" />
+		<!-- ポインタ(中央線)の色。デフォルトはR.color.default_pointer_color -->
+		<attr name="pointer_color" format="color" />
+		<!-- 目盛りの色。デフォルトはdefault_scale_color -->
+		<attr name="scale_color" format="color" />
+		<!-- ポインタ(中央線)の幅。デフォルトはR.dimen.default_pointer_width -->
+		<attr name="pointer_width" format="dimension" />
+		<!-- 目盛りの幅。デフォルトはR.dimen.default_scale_width -->
+		<attr name="scale_width" format="dimension" />
+		<!-- 取得できる値は0-360の範囲内か。trueなら360の次は0になるが、falseなら0未満や361以上の値も取得される。デフォルトはtrue -->
+		<attr name="value_limited" format="boolean" />
+		<!-- ホイール操作が終わった後に近くの目盛りにスナップするか。デフォルトはfalse -->
+		<attr name="snap_scale" format="boolean" />
 	</declare-styleable>
 
 </resources>

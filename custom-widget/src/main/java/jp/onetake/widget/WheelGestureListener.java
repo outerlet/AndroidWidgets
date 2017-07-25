@@ -29,9 +29,8 @@ public class WheelGestureListener extends GestureDetector.SimpleOnGestureListene
 	
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		double endAngle = mHorizontalWheel.getRadian() - velocityX * FLING_ADJUST_RATIO;
-		mHorizontalWheel.startInertiaScroll(endAngle);
-		
+		double endRadian = mHorizontalWheel.getRadian() + velocityX * FLING_ADJUST_RATIO ;
+		mHorizontalWheel.startInertiaScroll(endRadian);
 		mHorizontalWheel.setState(HorizontalWheel.State.Inertia);
 		
 		return super.onFling(e1, e2, velocityX, velocityY);
